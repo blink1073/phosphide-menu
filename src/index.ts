@@ -9,7 +9,7 @@
 
 import {
   IExtension, IExtensionPoint
-} from 'phosphide'
+} from 'phosphide';
 
 import {
   IDisposable, DisposableDelegate
@@ -22,7 +22,6 @@ import {
 import {
   attachWidget
 } from 'phosphor-widget';
-
 
 
 import './index.css';
@@ -52,7 +51,7 @@ var MENU_BAR_TEMPLATE = [
  * Menu Extension Point
  */
 export
-class MenuExtensionPoint { // Structurally implements IExtensionPoint
+class MainMenuExtensionPoint { // Structurally implements IExtensionPoint
   constructor(id: string) {
     this.id = id;
     this._menuBar = MenuBar.fromTemplate(MENU_BAR_TEMPLATE);
@@ -66,7 +65,6 @@ class MenuExtensionPoint { // Structurally implements IExtensionPoint
   }
 
   id: string;
-
   private _menuBar: MenuBar;
 }
 
@@ -78,7 +76,7 @@ export
 class MenuPlugin { // Structurally implements IPlugin
   constructor(id: string) {
     this.id = id;
-    this._menuExtensionPoint = new MenuExtensionPoint('menu.top_level');
+    this._menuExtensionPoint = new MainMenuExtensionPoint('menu.main');
   }
 
   extensionPoints(): IExtensionPoint[] {

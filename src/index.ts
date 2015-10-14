@@ -90,3 +90,4 @@ class MenuPlugin { // Structurally implements IPlugin
   id: string;
   private _menuExtensionPoint: IExtensionPoint;
 }
+

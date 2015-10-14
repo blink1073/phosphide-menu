@@ -27,6 +27,26 @@ import {
 
 import './index.css';
 
+var MENU_BAR_TEMPLATE = [
+  {
+    text: 'File',
+    submenu: [
+      {
+        text: 'Demo',
+        shortcut: 'Ctrl+D'
+      }
+    ]
+  },
+  {
+    text: 'Edit',
+    submenu: [
+      {
+        text: 'Undo'
+      }
+    ]
+  }
+];
+
 
 /**
  * Menu Extension Point
@@ -34,7 +54,7 @@ import './index.css';
 class MenuExtensionPoint { // Structurally implements IExtensionPoint
   constructor(id: string) {
     this.id = id;
-    this._menuBar = new MenuBar();
+    this._menuBar = MenuBar.fromTemplate(MENU_BAR_TEMPLATE);
     attachWidget(this._menuBar, document.body);
   }
 

@@ -1,6 +1,6 @@
 {
   "name": "phosphide-menu",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A menu plugin for phosphide",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -46,7 +46,8 @@
   },
   "files": [
     "lib/index.js",
-    "lib/index.d.ts"
+    "lib/index.d.ts",
+    "lib/index.css"
   ],
   "keywords": [
     "phosphide",

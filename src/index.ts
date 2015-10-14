@@ -59,6 +59,7 @@ class MainMenuExtensionPoint { // Structurally implements IExtensionPoint
   }
 
   extend(item: any): IDisposable {
+    console.log('Adding item to menu via extension point...')
     this._menuBar.children.push(item.menu); // TODO
 
     return; // TODO

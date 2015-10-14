@@ -88,7 +88,12 @@ class MenuPlugin { // Structurally implements IPlugin
   }
 
   load(): IDisposable {
+    console.log('Loading menu plugin');
     return;
+  }
+
+  unload(): void {
+    console.log('Unloading menu plugin');
   }
 
   id: string;

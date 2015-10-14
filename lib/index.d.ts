@@ -17,6 +17,7 @@ export declare class MenuPlugin {
     extensionPoints(): IExtensionPoint[];
     extensions(): IExtension[];
     load(): IDisposable;
+    unload(): void;
     id: string;
     private _menuExtensionPoint;
 }

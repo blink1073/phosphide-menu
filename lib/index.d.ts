@@ -18,6 +18,7 @@ export declare class MenuPlugin {
     extensions(): IExtension[];
     load(): IDisposable;
     unload(): void;
+    isRuntimeLoaded(): boolean;
     id: string;
     private _menuExtensionPoint;
 }

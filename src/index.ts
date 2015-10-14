@@ -96,8 +96,11 @@ class MenuPlugin { // Structurally implements IPlugin
     console.log('Unloading menu plugin');
   }
 
+  isRuntimeLoaded(): boolean {
+    return true;
+  }
+
   id: string;
-  isRuntimeLoaded = true; // TODO 
   private _menuExtensionPoint: IExtensionPoint;
 }
 

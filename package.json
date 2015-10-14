@@ -34,7 +34,7 @@
     "clean": "rimraf lib",
     "build:css": "node scripts/copycss.js",
     "build:src": "tsc --project src",
-    "build": "npm run build:src",
+    "build": "npm run build:src && npm run build:css",
     "docs": "rimraf docs/api && typedoc --options scripts/tdoptions.json",
     "build:example": "tsc --project example && browserify example/index.js -o example/bundle.js",
     "prepublish": "npm run build",

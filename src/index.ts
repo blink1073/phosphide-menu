@@ -51,6 +51,7 @@ var MENU_BAR_TEMPLATE = [
 /**
  * Menu Extension Point
  */
+export
 class MenuExtensionPoint { // Structurally implements IExtensionPoint
   constructor(id: string) {
     this.id = id;

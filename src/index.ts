@@ -87,6 +87,10 @@ class MenuPlugin { // Structurally implements IPlugin
     return [];
   }
 
+  load(): IDisposable {
+    return;
+  }
+
   id: string;
   private _menuExtensionPoint: IExtensionPoint;
 }

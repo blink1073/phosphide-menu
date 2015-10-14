@@ -97,6 +97,7 @@ class MenuPlugin { // Structurally implements IPlugin
   }
 
   id: string;
+  isRuntimeLoaded = true; // TODO 
   private _menuExtensionPoint: IExtensionPoint;
 }
 

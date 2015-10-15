@@ -60,8 +60,10 @@ class MainMenuExtensionPoint { // Structurally implements IExtensionPoint
   }
 
   extend(item: any): IDisposable {
-    console.log('Adding item to menu via extension point...')
-    this._menuBar.items.push(item.menu); // TODO
+    console.log('Adding item to menu via extension point...');
+    var items = this._menuBar.items.map( x => x );
+    items.push(item.item); // TODO - improve names
+    this._menuBar.items = items; 
 
     return; // TODO
   }

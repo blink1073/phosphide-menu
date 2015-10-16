@@ -47,6 +47,14 @@ var MENU_BAR_TEMPLATE = [
   }
 ];
 
+/**
+ * The interface required for a menu item.
+ */
+export
+interface IMenuExtension {
+  pointName: string;
+  item: MenuItem;
+}
 
 /**
  * Menu Extension Point
@@ -59,10 +67,10 @@ class MainMenuExtensionPoint { // Structurally implements IExtensionPoint
     attachWidget(this._menuBar, document.body);
   }
 
-  extend(item: any): IDisposable {
+  extend(item: IMenuExtension): IDisposable {
     console.log('Adding item to menu via extension point...');
     var items = this._menuBar.items.map( x => x );
-    items.push(item.item); // TODO - improve names
+    items.push(item.item); // TODO - improve variable names
     this._menuBar.items = items; 
 
     return; // TODO

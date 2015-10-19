@@ -1,6 +1,11 @@
 import { IExtension, IExtensionPoint } from 'phosphide';
 import { IDisposable } from 'phosphor-disposable';
 import { MenuItem } from 'phosphor-menus';
+export * from './constraints';
+export * from './menuiteminterface';
+export * from './menumanagerinterface';
+export * from './menusolver';
+export * from './menusolverfunctions';
 /**
  * The interface required for a menu item.
  */

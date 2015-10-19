@@ -26,6 +26,12 @@ import {
 
 import './index.css';
 
+export * from './constraints';
+export * from './menuiteminterface';
+export * from './menumanagerinterface';
+export * from './menusolver';
+export * from './menusolverfunctions';
+
 
 var MENU_BAR_TEMPLATE = [
   {

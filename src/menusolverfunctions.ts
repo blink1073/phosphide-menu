@@ -19,6 +19,10 @@ import {
   Menu, MenuBar, MenuItem
 } from 'phosphor-menus';
 
+import {
+  TopSort
+} from 'phosphor-topsort';
+
 /**
  * Flattens a shallow-nested array-of-arrays into a single array
  * with all elements.
@@ -140,8 +144,8 @@ var difference = function(first: string[], second: string[]): string[] {
  * Returns the constraints as an unordered array of directed edges for the objects
  * in the level of the tree at 'prefix', for every item in 'items'.
  */
-var getConstraints = function(items: string[][], prefix: string[]): string[][] {
-  var constraints: string[][] = [];
+var getConstraints = function(items: string[][], prefix: string[]): [string, string][] {
+  var constraints: [string,string][] = [];
   var allItems: string[] = [];
 
   for(var i=0; i<items.length; ++i) {
@@ -242,7 +246,8 @@ function partialSolve(items: ICommandMenuItem[], prefix: string[]): MenuItem[] {
   // At this point we have a fully formed menu for the 'prefix' level in the tree.
   // All we do now is sort based on the constraints given for all menu items
   // *at this level or below*.
-  // var order = toposort<string>(getConstraints(levelItems, prefix));
+  var order = TopSort.sort(getConstraints(levelItems, prefix));
+  console.log("ORDER: " + order.toString());
   return menuItems;
 } 
 

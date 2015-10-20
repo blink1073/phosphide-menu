@@ -179,6 +179,7 @@ var getConstraints = function(items: string[][], prefix: string[]): [string, str
   // This allows the user to only define constraints for the first item, and 
   // the rest will automatically fall into place, if defined in the required
   // order.
+  console.log("CONSTRAINTS: " + constraints.toString());
   var flattened = shallowFlatten(constraints);
   var allConstrained = flattened.filter(unique);
   var unconstrained = difference(allItems, allConstrained);

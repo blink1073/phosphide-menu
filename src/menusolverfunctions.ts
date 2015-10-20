@@ -164,7 +164,7 @@ var getConstraints = function(items: string[][], prefix: string[]): [string, str
         // now we have an array of constraints, actually constrain them
         // and push them onto the constraints var above.
         allCons[consItem].map((c: any) => {
-          constraints.push(c.constrain(itemName));
+          constraints.push(c.constrain(consItem));
         });
       }
     }

@@ -8,8 +8,8 @@
 'use strict';
 
 import {
-  IMenuManager
-} from './menumanagerinterface';
+  ICommandMenuItem
+} from './menuiteminterface';
 
 import {
   partialSolve
@@ -25,7 +25,7 @@ import {
  * menu creation.
  */
 export class MenuSolver {
-  constructor(private _registry: IMenuManager) {}
+  constructor() {}
 
   /**
    * We use topsort (topological sorting) to find the order of menu items 
@@ -36,7 +36,7 @@ export class MenuSolver {
    * time because the menu is just a simple tree, for which we need the
    * results one branch at a time.
    */
-  solve(): MenuBar {
+  solve(items?: ICommandMenuItem[]): MenuBar {
     /**
      * The very top level of a menu is a MenuBar which contains menu items.
      * Below this, everything is a MenuItem, either with 'text' and 'submenu'
@@ -52,8 +52,7 @@ export class MenuSolver {
      * the performance of this version is sufficient, there's no need for
      * the more complex one.
      */
-    var allItems = this._registry.allMenuItems();
-    var topLevel = partialSolve(allItems, []);
+    var topLevel = partialSolve(items, []);
     var menuBar = new MenuBar();
     menuBar.items = topLevel;
     return menuBar;

@@ -1,4 +1,6 @@
-import { IMenuItem } from './menuiteminterface';
+import { ICommandMenuItem } from './menuiteminterface';
+import { MenuBar } from 'phosphor-menus';
+import { ISignal } from 'phosphor-signaling';
 /**
  * MenuManager stores the existing registered menu names, and presents
  * information about this menu system to other parts of the application,
@@ -9,6 +11,7 @@ import { IMenuItem } from './menuiteminterface';
  * the application, for example there may be a manager per context menu.
  */
 export interface IMenuManager {
+    menuUpdated: ISignal<IMenuManager, MenuBar>;
     /**
      * Registers a menu item with the manager, returns a boolean to
      * confirm whether it registered correctly.
@@ -20,7 +23,7 @@ export interface IMenuManager {
      * This may require a more nuanced approach to dealing with errors.
      * TODO - should this return IDiposable?
      */
-    registerMenuItem(item: IMenuItem): boolean;
+    add(items: ICommandMenuItem[]): void;
     /**
      * Returns a list of objects implementing IMenuItem that represents all
      * currently registered menu items.
@@ -31,5 +34,5 @@ export interface IMenuManager {
      * as the ones registered using registerMenuItem - that's implementation-
      * specific, and should *not* be relied upon.
      */
-    allMenuItems(): IMenuItem[];
+    allMenuItems(): ICommandMenuItem[];
 }

@@ -1,12 +1,11 @@
-import { IMenuManager } from './menumanagerinterface';
+import { ICommandMenuItem } from './menuiteminterface';
 import { MenuBar } from 'phosphor-menus';
 /**
  * A class to solve the relationships between menu items and allow custom
  * menu creation.
  */
 export declare class MenuSolver {
-    private _registry;
-    constructor(_registry: IMenuManager);
+    constructor();
     /**
      * We use topsort (topological sorting) to find the order of menu items
      * based on their names and constraints.
@@ -16,5 +15,5 @@ export declare class MenuSolver {
      * time because the menu is just a simple tree, for which we need the
      * results one branch at a time.
      */
-    solve(): MenuBar;
+    solve(items?: ICommandMenuItem[]): MenuBar;
 }

@@ -7,7 +7,7 @@
  *
  *
  */
-export interface IMenuItem {
+export interface ICommandMenuItem {
     /**
      * This is a menubar-specific array of strings to denote the location
      * in the menu hierarchy where this command shoul be placed.

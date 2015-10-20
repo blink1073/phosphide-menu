@@ -12,7 +12,7 @@ import {
 } from './constraints';
 
 import {
-  IMenuItem
+  ICommandMenuItem
 } from './menuiteminterface';
 
 import {
@@ -99,7 +99,7 @@ var sortItems = (obj: any[]) => {obj.sort(); return obj;};
  * and once for the filter. It would be nice to reduce this to a single
  * iteration, if we can do it without obscuring what's really going on.
  */
-var getItemsAtLevel = function(items: IMenuItem[], level: string[]): string[][] {
+var getItemsAtLevel = function(items: ICommandMenuItem[], level: string[]): string[][] {
   var num = level.length;
   return items
     .map(function(val){
@@ -192,7 +192,7 @@ var getConstraints = function(items: string[][], prefix: string[]): string[][] {
  * all objects below that tree level.
  */
 export 
-function partialSolve(items: IMenuItem[], prefix: string[]): MenuItem[] {
+function partialSolve(items: ICommandMenuItem[], prefix: string[]): MenuItem[] {
   var menuItems: any[] = [];
   var levelItems: string[][] = getItemsAtLevel(items, prefix);
 

@@ -10,8 +10,16 @@
 
 
 import {
-  IMenuItem
+  ICommandMenuItem
 } from './menuiteminterface';
+
+import {
+  MenuBar
+} from 'phosphor-menus';
+
+import {
+  ISignal
+} from 'phosphor-signaling';
 
 
 /**
@@ -25,6 +33,8 @@ import {
  */
 export
 interface IMenuManager {
+  menuUpdated: ISignal<IMenuManager, MenuBar>;
+
   /**
    * Registers a menu item with the manager, returns a boolean to
    * confirm whether it registered correctly.
@@ -36,7 +46,7 @@ interface IMenuManager {
    * This may require a more nuanced approach to dealing with errors.
    * TODO - should this return IDiposable?
    */
-  registerMenuItem(item: IMenuItem): boolean;
+  add(items: ICommandMenuItem[]): void;
 
   /** 
    * Returns a list of objects implementing IMenuItem that represents all
@@ -48,5 +58,5 @@ interface IMenuManager {
    * as the ones registered using registerMenuItem - that's implementation-
    * specific, and should *not* be relied upon. 
    */
-  allMenuItems(): IMenuItem[];
+  allMenuItems(): ICommandMenuItem[];
 }

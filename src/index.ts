@@ -8,6 +8,18 @@
 'use strict';
 
 import {
+  ICommandMenuItem
+} from './menuiteminterface';
+
+import {
+  IMenuManager
+} from './menumanagerinterface'
+
+import {
+  MenuSolver
+} from './menusolver';
+
+import {
   IExtension, IExtensionPoint
 } from 'phosphide';
 
@@ -20,7 +32,11 @@ import {
 } from 'phosphor-menus';
 
 import {
-  attachWidget
+  Signal, ISignal
+} from 'phosphor-signaling';
+
+import {
+  attachWidget, detachWidget
 } from 'phosphor-widget';
 
 
@@ -53,13 +69,44 @@ var MENU_BAR_TEMPLATE = [
   }
 ];
 
+
+export
+class MenuManager { // implements IMenuManager ??
+  static menuUpdatedSignal = new Signal<MenuManager, MenuBar>();
+
+  get menuUpdated(): ISignal<MenuManager, MenuBar> {
+    return MenuManager.menuUpdatedSignal.bind(this);
+  }
+
+  constructor(input?: ICommandMenuItem[]) {
+    this._items = input || [];
+    this._solver = new MenuSolver();
+  }
+
+  add(items: ICommandMenuItem[]): void { // TODO : should return IDisposable.
+    for (var i = 0; i<items.length; ++i) {
+      this._items.push(items[i]);
+    }
+    var menuBar = this._solver.solve(this._items);
+    this.menuUpdated.emit(menuBar);
+  }
+
+  allMenuItems(): ICommandMenuItem[] {
+    return this._items;
+  }
+
+  private _items: ICommandMenuItem[];
+  private _solver: MenuSolver;
+}
+
+
 /**
  * The interface required for a menu item.
  */
 export
 interface IMenuExtension {
   pointName: string;
-  item: MenuItem;
+  item: ICommandMenuItem;
 }
 
 /**
@@ -69,21 +116,27 @@ export
 class MainMenuExtensionPoint { // Structurally implements IExtensionPoint
   constructor(id: string) {
     this.id = id;
-    this._menuBar = MenuBar.fromTemplate(MENU_BAR_TEMPLATE);
-    attachWidget(this._menuBar, document.body);
+    this._manager = new MenuManager();
+    this._manager.menuUpdated.connect(this._onMenuUpdated, this);
   }
 
-  extend(item: IMenuExtension): IDisposable {
-    console.log('Adding item to menu via extension point...');
-    var items = this._menuBar.items.map( x => x );
-    items.push(item.item); // TODO - improve variable names
-    this._menuBar.items = items; 
+  extend(items: IMenuExtension[]): IDisposable {
+    console.log('Adding items to menu via extension point...');
+    this._manager.add(items.map(x => x.item));
+    return; // TODO - disposable.
+  }
 
-    return; // TODO
+  private _onMenuUpdated(sender: IMenuManager, value: MenuBar) {
+    if (this._menuBar) {
+      detachWidget(this._menuBar);
+    }
+    this._menuBar = value;
+    attachWidget(this._menuBar, document.body);
   }
 
   id: string;
   private _menuBar: MenuBar;
+  private _manager: IMenuManager;
 }
 
 
@@ -94,11 +147,11 @@ export
 class MenuPlugin { // Structurally implements IPlugin
   constructor(id: string) {
     this.id = id;
-    this._menuExtensionPoint = new MainMenuExtensionPoint('menu.main');
+    this._mainMenuExtensionPoint = new MainMenuExtensionPoint('menu.main');
   }
 
   extensionPoints(): IExtensionPoint[] {
-    return [this._menuExtensionPoint];
+    return [this._mainMenuExtensionPoint];
   }
 
   extensions(): IExtension[] {
@@ -119,6 +172,6 @@ class MenuPlugin { // Structurally implements IPlugin
   }
 
   id: string;
-  private _menuExtensionPoint: IExtensionPoint;
+  private _mainMenuExtensionPoint: IExtensionPoint;
 }
 

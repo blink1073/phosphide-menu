@@ -1,4 +1,4 @@
-import { IMenuItem } from './menuiteminterface';
+import { ICommandMenuItem } from './menuiteminterface';
 import { MenuItem } from 'phosphor-menus';
 /**
  * Flattens a shallow-nested array-of-arrays into a single array
@@ -37,4 +37,4 @@ export declare function unique<T>(val: T, i: number, self: any): boolean;
  * Takes a list of IMenuItems and a prefix and returns a fully formed menu for
  * all objects below that tree level.
  */
-export declare function partialSolve(items: IMenuItem[], prefix: string[]): MenuItem[];
+export declare function partialSolve(items: ICommandMenuItem[], prefix: string[]): MenuItem[];

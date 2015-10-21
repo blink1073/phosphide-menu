@@ -152,6 +152,7 @@ var getConstraintsAtLevel = function(item: string[], level: number): [string, st
   var constraints: [string, string][] = [];
   var menuItem = (<any>(item)).menuItem;
   var levelText = menuItem.location[level];
+  if (menuItem.constraints === undefined) { return constraints; }
   var cons = menuItem.constraints[levelText];
   if (cons) {
     for (var c = 0; c < cons.length; ++c) {
@@ -187,7 +188,7 @@ var getConstraints = function(items: string[][], prefix: string[]): [string, str
 
   // TODO - replace this with constraints that keep the definition order
   // in the for-loop above
-  
+
   // var flattened = shallowFlatten(constraints);
   // var allConstrained = flattened.filter(unique);
   // var unconstrained = difference(allItems, allConstrained);

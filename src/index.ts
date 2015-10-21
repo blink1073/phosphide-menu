@@ -48,28 +48,10 @@ export * from './menumanagerinterface';
 export * from './menusolver';
 export * from './menusolverfunctions';
 
-
-var MENU_BAR_TEMPLATE = [
-  {
-    text: 'File',
-    submenu: [
-      {
-        text: 'Demo',
-        shortcut: 'Ctrl+D'
-      }
-    ]
-  },
-  {
-    text: 'Edit',
-    submenu: [
-      {
-        text: 'Undo'
-      }
-    ]
-  }
-];
-
-
+/**
+ * A simple Menu manager to generate a MenuBar when the 
+ * menu structure changes.
+ */
 export
 class MenuManager { // implements IMenuManager ??
   static menuUpdatedSignal = new Signal<MenuManager, MenuBar>();

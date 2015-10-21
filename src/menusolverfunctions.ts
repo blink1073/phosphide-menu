@@ -141,32 +141,36 @@ var difference = function(first: string[], second: string[]): string[] {
 }
 
 /**
+ * Returns the constraints for all items at a given level in the 
+ * tree. 
+ * Eg. if the constraints for ['File','New','Document'] include
+ * 'file': before('edit'), 'new': before('open'), then
+ * the constraints at level 0 will be ['File','Edit'], and the
+ * constraints at level 1 will be ['New', 'Open']
+ */
+var getConstraintsAtLevel = function(item: string[], level: number): [string, string][] {
+  var constraints: [string, string][] = [];
+  var menuItem = (<any>(item)).menuItem;
+  var levelText = menuItem.location[level];
+  var cons = menuItem.constraints[levelText];
+  if (cons) {
+    for (var c = 0; c < cons.length; ++c) {
+      constraints.push(cons[c].constrain(levelText));
+    }
+  }
+  return constraints;
+}
+
+/**
  * Returns the constraints as an unordered array of directed edges for the objects
  * in the level of the tree at 'prefix', for every item in 'items'.
  */
 var getConstraints = function(items: string[][], prefix: string[]): [string, string][] {
   var constraints: [string,string][] = [];
-  var allItems: string[] = [];
-
   for(var i=0; i<items.length; ++i) {
     if(matchesPrefix(prefix, items[i])) {
-      var itemName = items[i][prefix.length];
-      allItems.push(itemName);
-
-      // work out which item in this part of the tree is required.
-      var consItem = itemForConstraint(prefix, items[i]);
-
-      // pull out the constraints for that item.
-      // allCons will be undefined if there's no constraints declared
-      // for this item.
-      var allCons = ((<any>(items[i])).menuItem).constraints;
-      if (allCons && allCons[consItem]) {
-        // now we have an array of constraints, actually constrain them
-        // and push them onto the constraints var above.
-        allCons[consItem].map((c: any) => {
-          constraints.push(c.constrain(consItem));
-        });
-      }
+      var allCons = getConstraintsAtLevel(items[i], prefix.length);
+      allCons.map((x) => { constraints.push(x); })
     }
   }
 
@@ -180,13 +184,17 @@ var getConstraints = function(items: string[][], prefix: string[]): [string, str
   // the rest will automatically fall into place, if defined in the required
   // order.
   console.log("CONSTRAINTS: " + constraints.toString());
-  var flattened = shallowFlatten(constraints);
-  var allConstrained = flattened.filter(unique);
-  var unconstrained = difference(allItems, allConstrained);
-  unconstrained.sort();
-  for (var i=0; i<unconstrained.length - 1; i++) {
-    constraints.push([unconstrained[i], unconstrained[i + 1]]);
-  }
+
+  // TODO - replace this with constraints that keep the definition order
+  // in the for-loop above
+  
+  // var flattened = shallowFlatten(constraints);
+  // var allConstrained = flattened.filter(unique);
+  // var unconstrained = difference(allItems, allConstrained);
+  // unconstrained.sort();
+  // for (var i=0; i<unconstrained.length - 1; i++) {
+  //   constraints.push([unconstrained[i], unconstrained[i + 1]]);
+  // }
 
   // TODO : do this properly - should be based on position defined.
   return constraints;

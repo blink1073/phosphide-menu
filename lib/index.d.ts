@@ -8,6 +8,10 @@ export * from './menuiteminterface';
 export * from './menumanagerinterface';
 export * from './menusolver';
 export * from './menusolverfunctions';
+/**
+ * A simple Menu manager to generate a MenuBar when the
+ * menu structure changes.
+ */
 export declare class MenuManager {
     static menuUpdatedSignal: Signal<MenuManager, MenuBar>;
     menuUpdated: ISignal<MenuManager, MenuBar>;

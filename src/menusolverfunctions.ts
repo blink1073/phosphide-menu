@@ -23,6 +23,7 @@ import {
   TopSort
 } from 'phosphor-topsort';
 
+
 /**
  * Flattens a shallow-nested array-of-arrays into a single array
  * with all elements.
@@ -96,7 +97,14 @@ var buildSubmenu = function(items: MenuItem[], text: string): MenuItem {
 
 var sortItems = (obj: any[]) => {obj.sort(); return obj;};
 
+var arrayEquality = function(a: any[], b: any[]): boolean {
+  return (a.length === b.length) && a.every((x: any, y: any): boolean => {
+    return a === b[y];
+  });
+}
+
 /**
+ * Returns the all the items at a given level in the tree.
  *
  * #### Notes
  * This currently iterates over the items array twice; once for the map
@@ -107,9 +115,8 @@ var getItemsAtLevel = function(items: ICommandMenuItem[], level: string[]): stri
   var num = level.length;
   return items
     .map(function(val){
-      // TODO : fix the .toString's below - only required for array equality.
       var vloc = val.location;
-      if((vloc.length > num) && (vloc.slice(0,num).toString() === level.toString())) {
+      if((vloc.length > num) && arrayEquality(vloc.slice(0,num), level)) {
         (<any>vloc).menuItem = val;
         return <string[]>vloc;
       }
@@ -123,14 +130,7 @@ var getItemsAtLevel = function(items: ICommandMenuItem[], level: string[]): stri
  * prefix argument. Essentially 'is this menu item in this part of the tree?'.
  */
 var matchesPrefix = function(prefix: string[], item: string[]): boolean {
-  return item.length >= prefix.length && item.slice(0, prefix.length).toString() === prefix.toString();
-}
-
-/**
- * TODO!
- */
-var itemForConstraint = function(prefix: string[], item: string[]): string {
-  return item.slice(prefix.length-1, prefix.length)[0];
+  return item.length >= prefix.length && arrayEquality(item.slice(0, prefix.length), prefix);
 }
 
 /**
@@ -143,6 +143,7 @@ var difference = function(first: string[], second: string[]): string[] {
 /**
  * Returns the constraints for all items at a given level in the 
  * tree. 
+ *
  * Eg. if the constraints for ['File','New','Document'] include
  * 'file': before('edit'), 'new': before('open'), then
  * the constraints at level 0 will be ['File','Edit'], and the
@@ -184,10 +185,6 @@ var getConstraints = function(items: string[][], prefix: string[]): [string, str
   // This allows the user to only define constraints for the first item, and 
   // the rest will automatically fall into place, if defined in the required
   // order.
-  console.log("CONSTRAINTS: " + constraints.toString());
-
-  // TODO - replace this with constraints that keep the definition order
-  // in the for-loop above
 
   // var flattened = shallowFlatten(constraints);
   // var allConstrained = flattened.filter(unique);
@@ -210,8 +207,7 @@ function partialSolve(items: ICommandMenuItem[], prefix: string[]): MenuItem[] {
   var menuItems: any[] = [];
   var levelItems: string[][] = getItemsAtLevel(items, prefix);
 
-  // TODO : don't need to sort at every level, can just sort once in the top
-  // call
+  // TODO : don't need to sort at every level, can just sort once at the top
   sortItems(levelItems);
 
   var startIdx = 0;
@@ -257,7 +253,6 @@ function partialSolve(items: ICommandMenuItem[], prefix: string[]): MenuItem[] {
   // All we do now is sort based on the constraints given for all menu items
   // *at this level or below*.
   var order = TopSort.sort(getConstraints(levelItems, prefix));
-  console.log("ORDER: " + order.toString());
   menuItems.sort((a:any, b:any): number => {
     return order.indexOf(a.text) - order.indexOf(b.text);
   });

@@ -20,7 +20,7 @@ import {
 } from './menusolver';
 
 import {
-  IExtension, IExtensionPoint
+  IExtension, IExtensionPoint, PointDelegate
 } from 'phosphide';
 
 import {
@@ -48,14 +48,22 @@ export * from './menumanagerinterface';
 export * from './menusolver';
 export * from './menusolverfunctions';
 
+
 /**
  * A simple Menu manager to generate a MenuBar when the 
  * menu structure changes.
  */
 export
-class MenuManager { // implements IMenuManager ??
+class MenuManager { // implements IMenuManager
+
+  /**
+   * Signal emitted when a menu item is added or removed.
+   */
   static menuUpdatedSignal = new Signal<MenuManager, MenuBar>();
 
+  /**
+   * Pure delegate getter for [[menuUpdatedSignal]].
+   */
   get menuUpdated(): ISignal<MenuManager, MenuBar> {
     return MenuManager.menuUpdatedSignal.bind(this);
   }
@@ -65,6 +73,11 @@ class MenuManager { // implements IMenuManager ??
     this._solver = new MenuSolver();
   }
 
+  /**
+   * Add items to the existing menu structure. 
+   *
+   * This should only be called by extend() on the extension point.
+   */
   add(items: ICommandMenuItem[]): void { // TODO : should return IDisposable.
     for (var i = 0; i<items.length; ++i) {
       this._items.push(items[i]);
@@ -73,6 +86,9 @@ class MenuManager { // implements IMenuManager ??
     this.menuUpdated.emit(menuBar);
   }
 
+  /**
+   * Return an array containing all menu items.
+   */
   allMenuItems(): ICommandMenuItem[] {
     return this._items;
   }
@@ -91,6 +107,7 @@ interface IMenuExtension {
   item: ICommandMenuItem;
 }
 
+
 /**
  * Menu Extension Point
  */
@@ -102,6 +119,9 @@ class MainMenuExtensionPoint { // Structurally implements IExtensionPoint
     this._manager.menuUpdated.connect(this._onMenuUpdated, this);
   }
 
+  /**
+   * Extend the existing menu functionality.
+   */
   extend(items: IMenuExtension[]): IDisposable {
     console.log('Adding items to menu via extension point...');
     var stripped = items.map(function(x) { return x.item; });
@@ -124,37 +144,23 @@ class MainMenuExtensionPoint { // Structurally implements IExtensionPoint
 
 
 /**
- *
+ * A phosphide plugin which extends the application functionality by 
+ * adding a pluggable/extensible main menu.
  */
 export
-class MenuPlugin { // Structurally implements IPlugin
+class MenuPlugin extends PointDelegate {
   constructor(id: string) {
-    this.id = id;
+    super(id);
     this._mainMenuExtensionPoint = new MainMenuExtensionPoint('menu.main');
   }
 
+  /**
+   * Returns the extension points for this plugin.
+   */
   extensionPoints(): IExtensionPoint[] {
     return [this._mainMenuExtensionPoint];
   }
 
-  extensions(): IExtension[] {
-    return [];
-  }
-
-  load(): IDisposable {
-    console.log('Loading menu plugin');
-    return;
-  }
-
-  unload(): void {
-    console.log('Unloading menu plugin');
-  }
-
-  isRuntimeLoaded(): boolean {
-    return true;
-  }
-
-  id: string;
   private _mainMenuExtensionPoint: IExtensionPoint;
 }
 

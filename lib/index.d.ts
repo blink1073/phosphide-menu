@@ -1,5 +1,5 @@
 import { ICommandMenuItem } from './menuiteminterface';
-import { IExtension, IExtensionPoint } from 'phosphide';
+import { IExtensionPoint, PointDelegate } from 'phosphide';
 import { IDisposable } from 'phosphor-disposable';
 import { MenuBar } from 'phosphor-menus';
 import { Signal, ISignal } from 'phosphor-signaling';
@@ -13,10 +13,24 @@ export * from './menusolverfunctions';
  * menu structure changes.
  */
 export declare class MenuManager {
+    /**
+     * Signal emitted when a menu item is added or removed.
+     */
     static menuUpdatedSignal: Signal<MenuManager, MenuBar>;
+    /**
+     * Pure delegate getter for [[menuUpdatedSignal]].
+     */
     menuUpdated: ISignal<MenuManager, MenuBar>;
     constructor(input?: ICommandMenuItem[]);
+    /**
+     * Add items to the existing menu structure.
+     *
+     * This should only be called by extend() on the extension point.
+     */
     add(items: ICommandMenuItem[]): void;
+    /**
+     * Return an array containing all menu items.
+     */
     allMenuItems(): ICommandMenuItem[];
     private _items;
     private _solver;
@@ -33,6 +47,9 @@ export interface IMenuExtension {
  */
 export declare class MainMenuExtensionPoint {
     constructor(id: string);
+    /**
+     * Extend the existing menu functionality.
+     */
     extend(items: IMenuExtension[]): IDisposable;
     private _onMenuUpdated(sender, value);
     id: string;
@@ -40,15 +57,14 @@ export declare class MainMenuExtensionPoint {
     private _manager;
 }
 /**
- *
+ * A phosphide plugin which extends the application functionality by
+ * adding a pluggable/extensible main menu.
  */
-export declare class MenuPlugin {
+export declare class MenuPlugin extends PointDelegate {
     constructor(id: string);
+    /**
+     * Returns the extension points for this plugin.
+     */
     extensionPoints(): IExtensionPoint[];
-    extensions(): IExtension[];
-    load(): IDisposable;
-    unload(): void;
-    isRuntimeLoaded(): boolean;
-    id: string;
     private _mainMenuExtensionPoint;
 }

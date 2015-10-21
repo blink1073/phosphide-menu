@@ -98,7 +98,7 @@ var sortItems = (obj: any[]) => {obj.sort(); return obj;};
 
 var arrayEquality = function(a: any[], b: any[]): boolean {
   return (a.length === b.length) && a.every((x: any, y: any): boolean => {
-    return a === b[y];
+    return x === b[y];
   });
 }
 

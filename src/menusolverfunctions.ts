@@ -258,6 +258,9 @@ function partialSolve(items: ICommandMenuItem[], prefix: string[]): MenuItem[] {
   // *at this level or below*.
   var order = TopSort.sort(getConstraints(levelItems, prefix));
   console.log("ORDER: " + order.toString());
+  menuItems.sort((a:any, b:any): number => {
+    return order.indexOf(b.text) - order.indexOf(a.text);
+  });
   return menuItems;
 } 
 

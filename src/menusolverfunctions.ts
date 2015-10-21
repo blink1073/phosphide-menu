@@ -94,8 +94,9 @@ var buildSubmenu = function(items: MenuItem[], text: string): MenuItem {
   return new MenuItem({text: text, submenu: menuObj});
 }
 
-var sortItems = (obj: any[]) => {obj.sort(); return obj;};
-
+/**
+ * Returns true if the arrays are equal, false otherwise.
+ */
 var arrayEquality = function(a: any[], b: any[]): boolean {
   return (a.length === b.length) && a.every((x: any, y: any): boolean => {
     return x === b[y];
@@ -206,8 +207,9 @@ function partialSolve(items: ICommandMenuItem[], prefix: string[]): MenuItem[] {
   var menuItems: any[] = [];
   var levelItems: string[][] = getItemsAtLevel(items, prefix);
 
-  // TODO : don't need to sort at every level, can just sort once at the top
-  sortItems(levelItems);
+  // TODO : don't need to sort at every level, can just sort once at the top,
+  // or require the items to be sorted before calling partialSolve.
+  levelItems.sort();
 
   var startIdx = 0;
   var endIdx = 0;

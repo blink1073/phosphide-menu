@@ -16,7 +16,6 @@ import { MenuItem } from 'phosphor-menus';
  * ```
  *
  * #### Notes
- * This runs in `O(n)` time.
  *
  * This is called `shallowFlatten` because it will not flatten arrays
  * to arbitrary levels of nesting, this only works 2 levels deep. This

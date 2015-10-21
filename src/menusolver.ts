@@ -25,8 +25,6 @@ import {
  * menu creation.
  */
 export class MenuSolver {
-  constructor() {}
-
   /**
    * We use topsort (topological sorting) to find the order of menu items 
    * based on their names and constraints.
@@ -36,7 +34,7 @@ export class MenuSolver {
    * time because the menu is just a simple tree, for which we need the
    * results one branch at a time.
    */
-  solve(items?: ICommandMenuItem[]): MenuBar {
+  static solve(items: ICommandMenuItem[]): MenuBar {
     /**
      * The very top level of a menu is a MenuBar which contains menu items.
      * Below this, everything is a MenuItem, either with 'text' and 'submenu'

@@ -5,7 +5,6 @@ import { MenuBar } from 'phosphor-menus';
  * menu creation.
  */
 export declare class MenuSolver {
-    constructor();
     /**
      * We use topsort (topological sorting) to find the order of menu items
      * based on their names and constraints.
@@ -15,5 +14,5 @@ export declare class MenuSolver {
      * time because the menu is just a simple tree, for which we need the
      * results one branch at a time.
      */
-    solve(items?: ICommandMenuItem[]): MenuBar;
+    static solve(items: ICommandMenuItem[]): MenuBar;
 }

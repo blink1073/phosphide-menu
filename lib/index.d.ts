@@ -1,4 +1,5 @@
 import { ICommandMenuItem } from './menuiteminterface';
+import { IMenuManager } from './menumanagerinterface';
 import { IExtensionPoint, PointDelegate } from 'phosphide';
 import { IDisposable } from 'phosphor-disposable';
 import { MenuBar } from 'phosphor-menus';
@@ -12,7 +13,7 @@ export * from './menusolverfunctions';
  * A simple Menu manager to generate a MenuBar when the
  * menu structure changes.
  */
-export declare class MenuManager {
+export declare class MenuManager implements IMenuManager {
     /**
      * Signal emitted when a menu item is added or removed.
      */
@@ -26,6 +27,7 @@ export declare class MenuManager {
      * Add items to the existing menu structure.
      *
      * This should only be called by extend() on the extension point.
+     * TODO : should return IDisposable.
      */
     add(items: ICommandMenuItem[]): void;
     /**
@@ -33,7 +35,6 @@ export declare class MenuManager {
      */
     allMenuItems(): ICommandMenuItem[];
     private _items;
-    private _solver;
 }
 /**
  * The interface required for a menu item.

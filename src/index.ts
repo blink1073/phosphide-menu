@@ -54,7 +54,7 @@ export * from './menusolverfunctions';
  * menu structure changes.
  */
 export
-class MenuManager { // implements IMenuManager
+class MenuManager implements IMenuManager {
 
   /**
    * Signal emitted when a menu item is added or removed.
@@ -70,19 +70,19 @@ class MenuManager { // implements IMenuManager
 
   constructor(input?: ICommandMenuItem[]) {
     this._items = input || [];
-    this._solver = new MenuSolver();
   }
 
   /**
    * Add items to the existing menu structure. 
    *
    * This should only be called by extend() on the extension point.
+   * TODO : should return IDisposable.
    */
-  add(items: ICommandMenuItem[]): void { // TODO : should return IDisposable.
+  add(items: ICommandMenuItem[]): void {
     for (var i = 0; i<items.length; ++i) {
       this._items.push(items[i]);
     }
-    var menuBar = this._solver.solve(this._items);
+    var menuBar = MenuSolver.solve(this._items);
     this.menuUpdated.emit(menuBar);
   }
 
@@ -94,7 +94,6 @@ class MenuManager { // implements IMenuManager
   }
 
   private _items: ICommandMenuItem[];
-  private _solver: MenuSolver;
 }
 
 

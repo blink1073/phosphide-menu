@@ -20,7 +20,7 @@ import {
 } from './menusolver';
 
 import {
-  IExtension, IExtensionPoint, PointDelegate
+  IExtension
 } from 'phosphide';
 
 import {
@@ -50,116 +50,34 @@ export * from './menusolverfunctions';
 
 
 /**
- * A simple Menu manager to generate a MenuBar when the 
- * menu structure changes.
+ * The interface required for menu items.
  */
 export
-class MenuManager implements IMenuManager {
-
-  /**
-   * Signal emitted when a menu item is added or removed.
-   */
-  static menuUpdatedSignal = new Signal<MenuManager, MenuBar>();
-
-  /**
-   * Pure delegate getter for [[menuUpdatedSignal]].
-   */
-  get menuUpdated(): ISignal<MenuManager, MenuBar> {
-    return MenuManager.menuUpdatedSignal.bind(this);
-  }
-
-  constructor(input?: ICommandMenuItem[]) {
-    this._items = input || [];
-  }
-
-  /**
-   * Add items to the existing menu structure. 
-   *
-   * This should only be called by extend() on the extension point.
-   * TODO : should return IDisposable.
-   */
-  add(items: ICommandMenuItem[]): void {
-    for (var i = 0; i<items.length; ++i) {
-      this._items.push(items[i]);
-    }
-    var menuBar = MenuSolver.solve(this._items);
-    this.menuUpdated.emit(menuBar);
-  }
-
-  /**
-   * Return an array containing all menu items.
-   */
-  allMenuItems(): ICommandMenuItem[] {
-    return this._items;
-  }
-
-  private _items: ICommandMenuItem[];
+interface IItems {
+  items: ICommandMenuItem[];
 }
 
 
-/**
- * The interface required for a menu item.
- */
 export
-interface IMenuExtension {
-  pointName: string;
-  item: ICommandMenuItem;
+function receiveItems(extension: IExtension<IItems>): IDisposable {
+  if (extension.object.hasOwnProperty('items')) {
+    menuItems = menuItems.concat(extension.object.items);
+  } 
+  if (extension.data.hasOwnProperty('items')) {
+    menuItems = menuItems.concat(extension.data.items);
+  }
+  if (menuBar) detachWidget(menuBar);
+  menuBar = MenuSolver.solve(menuItems);
+  attachWidget(menuBar, document.body);
+  return void 0;
 }
 
 
-/**
- * Menu Extension Point
- */
 export
-class MainMenuExtensionPoint { // Structurally implements IExtensionPoint
-  constructor(id: string) {
-    this.id = id;
-    this._manager = new MenuManager();
-    this._manager.menuUpdated.connect(this._onMenuUpdated, this);
-  }
-
-  /**
-   * Extend the existing menu functionality.
-   */
-  extend(items: IMenuExtension[]): IDisposable {
-    console.log('Adding items to menu via extension point...');
-    var stripped = items.map(function(x) { return x.item; });
-    this._manager.add(stripped);
-    return; // TODO - disposable.
-  }
-
-  private _onMenuUpdated(sender: IMenuManager, value: MenuBar) {
-    if (this._menuBar) {
-      detachWidget(this._menuBar);
-    }
-    this._menuBar = value;
-    attachWidget(this._menuBar, document.body);
-  }
-
-  id: string;
-  private _menuBar: MenuBar;
-  private _manager: IMenuManager;
+function initialize(): IDisposable {
+  return void 0;
 }
 
 
-/**
- * A phosphide plugin which extends the application functionality by 
- * adding a pluggable/extensible main menu.
- */
-export
-class MenuPlugin extends PointDelegate {
-  constructor(id: string) {
-    super(id);
-    this._mainMenuExtensionPoint = new MainMenuExtensionPoint('menu.main');
-  }
-
-  /**
-   * Returns the extension points for this plugin.
-   */
-  extensionPoints(): IExtensionPoint[] {
-    return [this._mainMenuExtensionPoint];
-  }
-
-  private _mainMenuExtensionPoint: IExtensionPoint;
-}
-
+var menuItems: ICommandMenuItem[] = [];
+var menuBar: MenuBar = null;

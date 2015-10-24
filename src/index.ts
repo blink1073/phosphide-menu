@@ -61,7 +61,7 @@ interface IItems {
 export
 function receiveItems(extension: IExtension<IItems>): IDisposable {
   if (extension.object && extension.object.hasOwnProperty('items')) {
-    console.log('got items');
+    console.log('got items', extension.object.items.length);
     menuItems = menuItems.concat(extension.object.items);
   } 
   if (extension.data && extension.data.hasOwnProperty('items')) {

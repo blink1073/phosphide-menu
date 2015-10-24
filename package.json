@@ -47,7 +47,7 @@
     "extensionPoints": [
       {
         "id": "menu:items",
-        "receiver": "receiveMenuItems"
+        "receiver": "receiveItems"
       }
     ]
   },

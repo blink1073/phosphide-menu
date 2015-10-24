@@ -60,10 +60,10 @@ interface IItems {
 
 export
 function receiveItems(extension: IExtension<IItems>): IDisposable {
-  if (extension.object.hasOwnProperty('items')) {
+  if (extension.object && extension.object.hasOwnProperty('items')) {
     menuItems = menuItems.concat(extension.object.items);
   } 
-  if (extension.data.hasOwnProperty('items')) {
+  if (extension.data && extension.data.hasOwnProperty('items')) {
     menuItems = menuItems.concat(extension.data.items);
   }
   if (menuBar) detachWidget(menuBar);

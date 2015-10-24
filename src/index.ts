@@ -61,6 +61,7 @@ interface IItems {
 export
 function receiveItems(extension: IExtension<IItems>): IDisposable {
   if (extension.object && extension.object.hasOwnProperty('items')) {
+    console.log('got items');
     menuItems = menuItems.concat(extension.object.items);
   } 
   if (extension.data && extension.data.hasOwnProperty('items')) {
@@ -69,6 +70,7 @@ function receiveItems(extension: IExtension<IItems>): IDisposable {
   if (menuBar) detachWidget(menuBar);
   menuBar = MenuSolver.solve(menuItems);
   attachWidget(menuBar, document.body);
+  console.log('attached', menuItems.length);
   return void 0;
 }
 
